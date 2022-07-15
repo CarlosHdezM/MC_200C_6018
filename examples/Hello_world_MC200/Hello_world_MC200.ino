@@ -6,7 +6,7 @@ MC_200 my_motor;
 void setup() {
   SPI.begin();
   Serial.begin(115200);
-  my_motor.initialize(10,5000000);
+  my_motor.initialize(10);
   if (my_motor.turnOn()){ 
     Serial.println("Motor turned on succesfully..."); 
   }
@@ -20,11 +20,10 @@ void setup() {
 void loop() {
 
   Serial.println("Setting Current to 0.3 Amps");
-  my_motor.setCurrent(0.3);
   while(my_motor.encoderCentiDegrees() < 72000){
+    my_motor.setCurrent(0.3);
     Serial.print("Position (Centidegrees): "); Serial.println(my_motor.encoderCentiDegrees());
     Serial.print("Current (Amperes): "); Serial.println(my_motor.currentAmps());
-    my_motor.updateStatus();
   }
 
   Serial.println("Setting Current to 0 Amps");
@@ -32,11 +31,10 @@ void loop() {
   delay(500);
 
   Serial.println("Setting Current to -0.3 Amps");
-  my_motor.setCurrent(-0.3);
   while(my_motor.encoderCentiDegrees() > 0){
+    my_motor.setCurrent(-0.3);
     Serial.print("Position (Centidegrees): "); Serial.println(my_motor.encoderCentiDegrees());
     Serial.print("Current (Amperes): "); Serial.println(my_motor.currentAmps());
-    my_motor.updateStatus();
   }
 
 }
