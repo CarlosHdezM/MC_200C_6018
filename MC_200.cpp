@@ -73,7 +73,7 @@ void MC_200::m_transferMC200Message(MC_200_Message & msg)
     if (delay_needed > 0) delayMicroseconds(delay_needed);
 
     digitalWrite(m_CS_pin,LOW);
-    delayMicroseconds(10);                                               //ToDo: Check and adjust this delay. Also take care of the magic number.
+    delayMicroseconds(20);                                               //ToDo: Check and adjust this delay. Also take care of the magic number.
     for (uint8_t i = 0; i < MC_200_Message::MESSAGE_SIZE_BYTES; i++)
     {
         response.data[i] = SPI.transfer(msg.data[i]);
