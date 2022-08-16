@@ -37,9 +37,8 @@ bool MC_200::turnOn()
 {
     MC_200_Message message_to_send;
     message_to_send.data[0] = 0B00001000;
-    m_multiTransferMC200Message(message_to_send, 4);   //ToDo: Check this magic count number
-    m_transferDummyMessage();
-    m_updateStatusVariables();
+    m_multiTransferMC200Message(message_to_send, 5);   //ToDo: Check this magic count number
+    if(m_response_ok) { m_updateStatusVariables(); }
     return m_is_turned_on;
 }
 
@@ -48,9 +47,8 @@ bool MC_200::turnOn()
 bool MC_200::turnOff()
 {
     MC_200_Message message_to_send;  //Defaults with all Zeros.
-    m_multiTransferMC200Message(message_to_send, 6);    //ToDo: Check this magic count number
-    m_transferDummyMessage();
-    m_updateStatusVariables();
+    m_multiTransferMC200Message(message_to_send, 7);    //ToDo: Check this magic count number
+    if (m_response_ok) { m_updateStatusVariables(); }
     return !m_is_turned_on;
 }
 
@@ -62,7 +60,7 @@ void MC_200::m_initSPITransfer()
 
 
 
-void MC_200::m_transferMC200Message(MC_200_Message & msg)
+bool MC_200::m_transferMC200Message(MC_200_Message & msg)
 {
     msg.calculateChecksum();
     #if DEBUG_ENABLED
@@ -80,6 +78,12 @@ void MC_200::m_transferMC200Message(MC_200_Message & msg)
     }
     m_last_SPI_transfer_usec = micros(); 
     digitalWrite(m_CS_pin, HIGH);
+    //Check for message received integrity (CRC)
+    uint8_t CRC_LOW =  response.data[MC_200_Message::MESSAGE_SIZE_BYTES - 2];
+    uint8_t CRC_HIGH = response.data[MC_200_Message::MESSAGE_SIZE_BYTES - 1];
+    response.calculateChecksum();
+    m_response_ok = (CRC_LOW == response.data[MC_200_Message::MESSAGE_SIZE_BYTES - 2] and CRC_HIGH == response.data[MC_200_Message::MESSAGE_SIZE_BYTES - 1]);
+    return m_response_ok;
 }
 
 
@@ -91,10 +95,10 @@ void MC_200::m_endTransferSPIMessage()
 
 
 
-void MC_200::m_transferDummyMessage(){
+bool MC_200::m_transferDummyMessage(){
     MC_200_Message message_to_send = MC_200_Message();
     message_to_send.data[0] = 0B11111000;
-    m_transferMC200Message(message_to_send);
+    return m_transferMC200Message(message_to_send);
 }
 
 
@@ -120,8 +124,8 @@ bool MC_200::setPositionPulses(int32_t pulse_position)
     m_initSPITransfer();
     m_transferMC200Message(message_to_send);
     m_endTransferSPIMessage();
-    m_updateStatusVariables();
-    return true;
+    if (m_response_ok){ m_updateStatusVariables(); }
+    return m_response_ok;
 }
 
 
@@ -142,8 +146,8 @@ bool MC_200::setCurrent(float curr_setpoint)
     m_initSPITransfer();
     m_transferMC200Message(message_to_send);
     m_endTransferSPIMessage();
-    m_updateStatusVariables();
-    return true;
+    if (m_response_ok){ m_updateStatusVariables(); }
+    return m_response_ok;
 }
 
 

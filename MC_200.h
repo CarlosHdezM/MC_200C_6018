@@ -30,6 +30,7 @@ class MC_200{
         const WorkingMode & workingMode() const { return m_working_mode;}
         const bool & isTurnedOn() const { return m_is_turned_on;}
         const uint8_t & alarmLimitSPIError() const { return m_alarm_limit_spi_error;}
+        const bool & isResponseOk() const {return m_response_ok;}
         void updateStatus();                                                //EXPERIMENTAL! Not ready to be used yet.
 
 
@@ -51,6 +52,7 @@ class MC_200{
         unsigned long m_last_SPI_transfer_usec;
 
         //Motor status variables
+        bool m_response_ok;
         float m_current_amps;
         int32_t m_encoder_pulses;
         int32_t m_encoder_centidegrees;
@@ -61,7 +63,7 @@ class MC_200{
         //Private member functions.
         //----SPI Transfer Functions
         void m_initSPITransfer();
-        void m_transferMC200Message(MC_200_Message & msg);     //Response updates "response" data member.
+        bool m_transferMC200Message(MC_200_Message & msg);     //Response updates "response" data member. Returns true if the checksum is correct. 
         void m_endTransferSPIMessage();
         void m_multiTransferMC200Message(MC_200_Message & msg, uint8_t msg_count);
         //----Update member variables functions. 
@@ -71,7 +73,7 @@ class MC_200{
         int32_t m_pulsesToCentiDegrees(int32_t pulses);
         int32_t m_centiDegreesToPulses(int32_t centi_degrees);
 
-        void m_transferDummyMessage();      //EXPERIMENTAL!
+        bool m_transferDummyMessage();      //EXPERIMENTAL!
 };
 
         /*#ToDo:
