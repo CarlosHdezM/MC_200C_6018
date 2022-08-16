@@ -37,9 +37,8 @@ bool MC_200::turnOn()
 {
     MC_200_Message message_to_send;
     message_to_send.data[0] = 0B00001000;
-    m_multiTransferMC200Message(message_to_send, 4);   //ToDo: Check this magic count number
-    m_transferDummyMessage();
-    m_updateStatusVariables();
+    m_multiTransferMC200Message(message_to_send, 5);   //ToDo: Check this magic count number
+    if(m_response_ok) { m_updateStatusVariables(); }
     return m_is_turned_on;
 }
 
@@ -48,9 +47,8 @@ bool MC_200::turnOn()
 bool MC_200::turnOff()
 {
     MC_200_Message message_to_send;  //Defaults with all Zeros.
-    m_multiTransferMC200Message(message_to_send, 6);    //ToDo: Check this magic count number
-    m_transferDummyMessage();
-    m_updateStatusVariables();
+    m_multiTransferMC200Message(message_to_send, 7);    //ToDo: Check this magic count number
+    if (m_response_ok) { m_updateStatusVariables(); }
     return !m_is_turned_on;
 }
 
