@@ -110,9 +110,10 @@ bool MC_200::setPositionCentiDegrees(int32_t centi_degrees){
 
 bool MC_200::setPositionPulses(int32_t pulse_position) 
 {
-    if(!m_is_turned_on or m_working_mode != WorkingMode::position_mode or m_alarm_limit_spi_error)
+    if(!m_is_turned_on or m_working_mode != WorkingMode::position_mode or m_alarm_limit_spi_error){
+        m_response_ok = false;
         return false;
-
+    }
     MC_200_Message message_to_send;
     //Prepare the message.
     message_to_send.data[0] = 0B00001000;
@@ -131,8 +132,10 @@ bool MC_200::setPositionPulses(int32_t pulse_position)
 
 bool MC_200::setCurrent(float curr_setpoint)
 {
-    if(!m_is_turned_on or m_working_mode != WorkingMode::current_mode or m_alarm_limit_spi_error)
+    if(!m_is_turned_on or m_working_mode != WorkingMode::current_mode or m_alarm_limit_spi_error){
+        m_response_ok = false;
         return false;
+    }
     union4bytes current_union;
     current_union.value_float = curr_setpoint;
     //Prepare the message
