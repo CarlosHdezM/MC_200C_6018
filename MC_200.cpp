@@ -9,7 +9,7 @@ MC_200::MC_200() : m_CS_pin(M_DEFAULT_CS_PIN) , m_SPI_speed(M_DEFAULT_SPI_SPEED)
 
 
 
-bool MC_200::initialize(uint8_t cs_pin = M_DEFAULT_CS_PIN, uint32_t spi_speed = M_DEFAULT_SPI_SPEED)
+bool MC_200::initialize(uint8_t cs_pin, uint32_t spi_speed)
 {
     m_CS_pin = cs_pin;
     m_SPI_speed = spi_speed;
