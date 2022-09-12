@@ -110,7 +110,7 @@ bool MC_200::setPositionCentiDegrees(int32_t centi_degrees){
 
 bool MC_200::setPositionPulses(int32_t pulse_position) 
 {
-    if(!m_is_turned_on or m_working_mode != WorkingMode::position_mode or m_alarm_limit_spi_error){
+    if(!m_is_turned_on or m_working_mode != WorkingMode::position_mode){
         m_response_ok = false;
         return false;
     }
@@ -132,7 +132,7 @@ bool MC_200::setPositionPulses(int32_t pulse_position)
 
 bool MC_200::setCurrent(float curr_setpoint)
 {
-    if(!m_is_turned_on or m_working_mode != WorkingMode::current_mode or m_alarm_limit_spi_error){
+    if(!m_is_turned_on or m_working_mode != WorkingMode::current_mode){
         m_response_ok = false;
         return false;
     }
