@@ -145,6 +145,7 @@ bool MC_200::setCurrent(float curr_setpoint)
     message_to_send.data[4] = current_union.bytes[1];
     message_to_send.data[5] = current_union.bytes[2];
     message_to_send.data[6] = current_union.bytes[3];
+    if (m_alarm_limit_spi_error) message_to_send.data[7] = 0B00010000;   //Reset SPI error flag?
     //Sending a message of 12 bytes. 
     m_initSPITransfer();
     m_transferMC200Message(message_to_send);
