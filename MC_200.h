@@ -15,7 +15,7 @@ class MC_200{
         enum class WorkingMode {position_mode = 1, velocity_mode = 2, current_mode = 3};
 
         //Public member functions
-        MC_200();
+        MC_200(SPIClass& spi = SPI);
         bool initialize(uint8_t cs_pin = M_DEFAULT_CS_PIN, uint32_t spi_speed = M_DEFAULT_SPI_SPEED);
         bool turnOn(); 
         bool turnOff();
@@ -74,6 +74,7 @@ class MC_200{
         int32_t m_centiDegreesToPulses(int32_t centi_degrees);
 
         bool m_transferDummyMessage();      //EXPERIMENTAL!
+        SPIClass& m_spi;
 };
 
         /*#ToDo:

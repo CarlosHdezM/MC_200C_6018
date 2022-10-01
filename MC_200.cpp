@@ -3,7 +3,7 @@
 
 
 
-MC_200::MC_200() : m_CS_pin(M_DEFAULT_CS_PIN) , m_SPI_speed(M_DEFAULT_SPI_SPEED)
+MC_200::MC_200(SPIClass& spi) : m_CS_pin(M_DEFAULT_CS_PIN) , m_SPI_speed(M_DEFAULT_SPI_SPEED), m_spi(spi)
 {
 }
 
@@ -55,7 +55,7 @@ bool MC_200::turnOff()
 
 void MC_200::m_initSPITransfer()
 {
-    SPI.beginTransaction(SPISettings(m_SPI_speed, MSBFIRST, SPI_MODE3));
+    m_spi.beginTransaction(SPISettings(m_SPI_speed, MSBFIRST, SPI_MODE3));
 }
 
 
@@ -74,7 +74,7 @@ bool MC_200::m_transferMC200Message(MC_200_Message & msg)
     delayMicroseconds(20);                                               //ToDo: Check and adjust this delay. Also take care of the magic number.
     for (uint8_t i = 0; i < MC_200_Message::MESSAGE_SIZE_BYTES; i++)
     {
-        response.data[i] = SPI.transfer(msg.data[i]);
+        response.data[i] = m_spi.transfer(msg.data[i]);
     }
     m_last_SPI_transfer_usec = micros(); 
     digitalWrite(m_CS_pin, HIGH);
@@ -90,7 +90,7 @@ bool MC_200::m_transferMC200Message(MC_200_Message & msg)
 
 void MC_200::m_endTransferSPIMessage()
 {
-    SPI.endTransaction();
+    m_spi.endTransaction();
 }
 
 
